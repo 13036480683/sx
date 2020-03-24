@@ -10,13 +10,11 @@ import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.subject.SimplePrincipalCollection;
 import org.apache.shiro.subject.Subject;
 import org.jodconverter.DocumentConverter;
-import org.jodconverter.office.LocalOfficeManager;
 import org.jodconverter.office.OfficeException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import xyz.ruankun.laughingspork.entity.*;
 import xyz.ruankun.laughingspork.service.*;
@@ -363,6 +361,10 @@ public class StudentController {
         //sxCorporationService.delete(sxCorporation);
         //sxCorporation.setId(null);
         sxCorporationService.save(sxCorporation);
+        // 还要更新到个人信息栏中
+        SxStudent byStuNo = sxStudentService.findByStuNo(sxStudent.getStuNo());
+        byStuNo.setCorpName(sxCorporation.getCorpName());
+        sxStudentService.save(byStuNo);
         return ControllerUtil.getSuccessResultBySelf(sxCorporationService.findByStuNo(sxStudent.getStuNo()));
     }
 
